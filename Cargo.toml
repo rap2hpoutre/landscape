@@ -1,0 +1,8 @@
+[package]
+name = "landscape"
+version = "0.1.0"
+authors = ["rap2h <raphaelht@gmail.com>"]
+
+[dependencies]
+image = "*"
+rand = "*"
