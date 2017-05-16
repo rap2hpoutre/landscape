@@ -48,7 +48,7 @@ impl Mountain {
         Mountain {
             color: color,
             points: points,
-            y_amp: y_amp
+            y_amp: y_amp,
         }
     }
     fn draw(&self, img: &mut RgbImage) {
@@ -67,25 +67,28 @@ fn main() {
     let mut img = ImageBuffer::new(640, 480);
     let mut rng = rand::thread_rng();
 
-    let initial_color: (u8, u8, u8) = (
-       rng.gen_range(1,255),
-       rng.gen_range(1,255), 
-       rng.gen_range(1,255)
-    );
+    let initial_color: (u8, u8, u8) =
+        (rng.gen_range(1, 255), rng.gen_range(1, 255), rng.gen_range(1, 255));
 
     let mountain_count: u8 = 5;
 
     for i in 0..mountain_count {
-        
         let m = Mountain::new(
-            Rgb([
-                initial_color.0 / mountain_count * (i+1) as u8, 
-                initial_color.1  / mountain_count * (i+1) as u8, 
-                initial_color.2  / mountain_count * (i+1) as u8
-            ]), [400 - 480 / 2 / mountain_count as u32 * (mountain_count as u32 - i as u32) , 480]);
+            Rgb(
+                [
+                    initial_color.0 / mountain_count * (i + 1) as u8,
+                    initial_color.1 / mountain_count * (i + 1) as u8,
+                    initial_color.2 / mountain_count * (i + 1) as u8,
+                ]
+            ),
+            [
+                400 - 480 / 2 / mountain_count as u32 * (mountain_count as u32 - i as u32),
+                480,
+            ],
+        );
         m.draw(&mut img);
     }
-    
+
     let ref mut fout = File::create(&Path::new("images/export.png")).unwrap();
-    let _    = ImageRgb8(img).save(fout, PNG);
+    let _ = ImageRgb8(img).save(fout, PNG);
 }
