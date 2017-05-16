@@ -82,7 +82,7 @@ fn main() {
                 initial_color.0 / mountain_count * (i+1) as u8, 
                 initial_color.1  / mountain_count * (i+1) as u8, 
                 initial_color.2  / mountain_count * (i+1) as u8
-            ]), [480 - 480 / 2 / mountain_count as u32 * (mountain_count as u32 - i as u32) , 480]);
+            ]), [400 - 480 / 2 / mountain_count as u32 * (mountain_count as u32 - i as u32) , 480]);
         m.draw(&mut img);
     }
     
