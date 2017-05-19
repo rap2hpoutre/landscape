@@ -5,4 +5,5 @@ authors = ["rap2h <raphaelht@gmail.com>"]
 
 [dependencies]
 image = "*"
+imageproc = "*"
 rand = "*"

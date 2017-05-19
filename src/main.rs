@@ -1,14 +1,16 @@
 extern crate image;
+extern crate imageproc;
 extern crate rand;
 
 use rand::Rng;
 use std::fs::File;
 use std::path::Path;
 use image::{ImageBuffer, Rgb, ImageRgb8, PNG, RgbImage};
+use imageproc::drawing::draw_filled_circle_mut;
 
-pub struct Mountain {
+struct Mountain {
     color: Rgb<u8>,
-    points: Vec<u32>
+    points: Vec<u32>,
 }
 
 impl Mountain {
@@ -61,8 +63,31 @@ impl Mountain {
     }
 }
 
-fn color_step(c1: u8, c2: u8, total: u8, step: u8) -> u8 {
-   (c1 as i16 + (c2 as i16 - c1 as i16) / total as i16  * step as i16) as u8
+struct Planet {
+    color: Rgb<u8>,
+    position: (i32, i32),
+    radius: i32
+}
+
+impl Planet {
+    fn new(color: Rgb<u8>, position: (i32, i32), radius: i32) -> Planet {
+        Planet {
+            color: color,
+            position: position,
+            radius: radius,
+        }
+    }
+    fn draw(&self, img: &mut RgbImage) {
+        draw_filled_circle_mut(img, (self.position.0, self.position.1), self.radius, self.color);
+    }
+}
+
+fn color_mix(c1: (u8, u8, u8), c2: (u8, u8, u8), total: u8, step: u8) ->  Rgb<u8> {
+    Rgb([
+        (c1.0 as i16 + (c2.0 as i16 - c1.0 as i16) / total as i16  * step as i16) as u8,
+        (c1.1 as i16 + (c2.1 as i16 - c1.1 as i16) / total as i16  * step as i16) as u8,
+        (c1.2 as i16 + (c2.2 as i16 - c1.2 as i16) / total as i16  * step as i16) as u8,
+    ])
 }
 
 fn main() {
@@ -74,24 +99,18 @@ fn main() {
         2 => (220, 220, rng.gen_range(230, 255)),
         _ => (rng.gen_range(200, 255),rng.gen_range(200, 255),rng.gen_range(200, 255)),
     };
+    let planet_color = (rng.gen_range(1, 255), rng.gen_range(1, 255), rng.gen_range(1, 255));
 
     let mountain_count: u8 = 5;
 
     let mut img = ImageBuffer::from_pixel(640, 480, Rgb([target_color.0, target_color.1, target_color.2]));
 
+    Planet::new(color_mix(target_color, planet_color, 8, 1), (rng.gen_range(101, 500), rng.gen_range(101, 200)), rng.gen_range(40, 200)).draw(&mut img);
+
     for i in 0..mountain_count {
         let m = Mountain::new(
-            Rgb(
-                [
-                    color_step(target_color.0, initial_color.0, mountain_count, (i + 1) as u8),
-                    color_step(target_color.1, initial_color.1, mountain_count, (i + 1) as u8),
-                    color_step(target_color.2, initial_color.2, mountain_count, (i + 1) as u8),
-                ]
-            ),
-            [
-                400 - 480 / 2 / mountain_count as u32 * (mountain_count as u32 - i as u32),
-                401,
-            ],
+            color_mix(target_color, initial_color, mountain_count, (i + 1) as u8),
+            [ 400 - 480 / 2 / mountain_count as u32 * (mountain_count as u32 - i as u32), 401 ],
         );
         m.draw(&mut img);
     }
