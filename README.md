@@ -1,6 +1,7 @@
 # landscape
-Procedural mountain generation. 2016-05-16 screenshot:
 
-![](https://raw.githubusercontent.com/rap2hpoutre/landscape/master/images/export.png)
+Procedural landscape generation.
 
-Highly inspired by: https://www.reddit.com/r/proceduralgeneration/comments/606y33/procedurally_generated_landscapes/
+Blog post: https://medium.com/@rap2h/a-procedural-landscape-experiment-4efe1826906f
+
+Website: https://rap2hpoutre.github.io/landscape-site/
